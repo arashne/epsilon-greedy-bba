@@ -55,7 +55,7 @@ class EpsilonGreedyBBA(BaseEnv):
             rnd = True
         else:
             small_ssim = ssim_indices[0]  # Is order preserved???
-            if 0 < small_ssim < 1:
+            if not np.isnan(small_ssim) and 0 < small_ssim < 1:
                 seed = int(small_ssim * 2 ** 20)
                 rng = np.random.default_rng(seed=seed)
                 sample = rng.random()
