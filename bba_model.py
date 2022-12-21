@@ -1,4 +1,5 @@
 from typing import Dict
+
 import numpy as np
 
 
@@ -6,6 +7,7 @@ class BBA(object):
     def __init__(self, lower=3, upper=13.5):
         self.lower = lower
         self.upper = upper
+        self.rng = np.random.default_rng()
 
     def select_video_format(self, obs: Dict[str, np.array]):
         sizes = obs["sizes"]
@@ -13,11 +15,10 @@ class BBA(object):
         buffer = obs["buffer"]
         rnd = obs["rnd"]
         assert sizes.shape == ssims.shape
-        if rnd:
-            valid_indices = [i for i in range(len(sizes)) if sizes[i] is not None and ssims[i] is not None]
-            rng = np.random.default_rng()
-            return rng.choice(valid_indices)
-        invalid_mask = np.logical_or(np.isnan(sizes), np.isnan(ssims))
+        invalid_mask = np.logical_and(np.abs(sizes-3) < 1e-6, np.abs(ssims-0.85) < 1e-6)
+        if rnd is True:
+            valid_indices = [i for i in range(len(sizes)) if invalid_mask[i] is False]
+            return self.rng.choice(valid_indices)
         size_arr_valid = np.ma.array(sizes, mask=invalid_mask)
         ssim_arr_valid = np.ma.array(ssims, mask=invalid_mask)
         min_choice = size_arr_valid.argmin()

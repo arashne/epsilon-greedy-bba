@@ -15,7 +15,8 @@ def main(args_env):
 
 if __name__ == "__main__":
     args = {"name": sys.argv[1],
-            "server_address": sys.argv[2]}
+            "model_path": sys.argv[2],
+            "server_address": sys.argv[3]}
     try:
         main(args)
     except:
