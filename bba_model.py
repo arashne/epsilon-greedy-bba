@@ -17,8 +17,8 @@ class BBA(object):
         assert sizes.shape == ssims.shape
         invalid_mask = np.logical_and(np.abs(sizes-3) < 1e-6, np.abs(ssims-0.85) < 1e-6)
         if rnd is True:
-            valid_indices = [i for i in range(len(sizes)) if invalid_mask[i] is False]
-            return self.rng.choice(valid_indices)
+            valid_indices = [i for i in range(len(sizes)) if invalid_mask[i] == False]
+            return int(self.rng.choice(valid_indices))
         size_arr_valid = np.ma.array(sizes, mask=invalid_mask)
         ssim_arr_valid = np.ma.array(ssims, mask=invalid_mask)
         min_choice = size_arr_valid.argmin()
@@ -34,4 +34,4 @@ class BBA(object):
             bitrate = ratio * (max_chunk - min_chunk) + min_chunk
             mask = np.logical_or(invalid_mask, size_arr_valid > bitrate)
             act = np.ma.array(ssim_arr_valid, mask=mask).argmax()
-        return act
+        return int(act)
